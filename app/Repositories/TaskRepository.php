@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\TaskRepositoryInterface;
 use App\Models\Task;
+use App\Http\Resources\TaskResource;
 use Illuminate\Http\JsonResponse;
 
 class TaskRepository implements TaskRepositoryInterface
@@ -14,7 +15,7 @@ class TaskRepository implements TaskRepositoryInterface
 
         return response()->json([
             'status' => 'success',
-            'data' => $tasks
+            'data' => TaskResource::collection($tasks)
         ], 200);
     }
 
@@ -88,6 +89,35 @@ class TaskRepository implements TaskRepositoryInterface
             return response()->json([
                 'status' => 'error',
                 'message' => 'The task couldn\'t be deleted.'
+            ], 401);
+        }
+    }
+
+    public function toggleTaskCompletion($taskId): JsonResponse
+    {
+        $task = Task::find($taskId);
+
+        // Check if this task belongs to the currently logged in user
+        if ($task->user_id != auth('sanctum')->id()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You do not own this task.'
+            ], 403);
+        }
+
+        $taskUpdated = Task::whereId($taskId)->update([
+            'is_completed' => !$task->is_completed
+        ]);
+
+        if ($taskUpdated) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Task updated successfully.'
+            ], 201);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The task couldn\'t be updated.'
             ], 401);
         }
     }

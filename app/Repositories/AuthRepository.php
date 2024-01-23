@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\AuthRepositoryInterface;
 use App\Models\User;
+use App\Models\Profile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,8 +13,29 @@ class AuthRepository implements AuthRepositoryInterface
 {
     public function register($registerDetails): JsonResponse
     {
+        // Check if the email exists
+        $existingEmail = User::where('email', $registerDetails['email'])->first();
+        if ($existingEmail) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Please use a different email.'
+            ], 401);
+        }
+
         $registerDetails['password'] = Hash::make($registerDetails['password']);
         $user = User::create($registerDetails);
+
+        if ($user) {
+            Profile::create([
+                'user_id' => $user->id,
+                'first_name' => $user->name
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'There was an issue creating this account.'
+            ], 401);
+        }
 
         // Attempt login
         if (Auth::loginUsingId($user->id)) {

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TaskRequest extends FormRequest
+class ProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,10 @@ class TaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => 'required',
-            'title' => 'required|min:3',
-            'description' => 'sometimes',
-            'due_date' => 'required|date'
+            'first_name' => 'sometimes',
+            'last_name' => 'sometimes',
+            'gender' => 'required',
+            'file' => 'sometimes|file|size:1024'
         ];
     }
 }

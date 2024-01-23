@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,3 +45,9 @@ Route::prefix('tasks')->group(function () {
     Route::delete('/{task}', [TaskController::class, 'deleteTask']);
 });
 // End task management routes
+
+// Start profile management routes
+Route::prefix('profile')->group(function () {
+    Route::patch('/{profile}', [ProfileController::class, 'updateProfile']);
+});
+// End profile management routes

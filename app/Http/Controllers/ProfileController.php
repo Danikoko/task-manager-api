@@ -21,4 +21,9 @@ class ProfileController extends Controller
         $validatedData = $request->validated();
         return $this->profileRepository->updateProfile($validatedData);
     }
+
+    public function getProfile()
+    {
+        return $this->profileRepository->getProfile();
+    }
 }

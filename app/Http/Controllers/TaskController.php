@@ -42,4 +42,14 @@ class TaskController extends Controller
     {
         return $this->taskRepository->deleteTask($task->id);
     }
+
+    public function toggleTaskCompletion(Task $task)
+    {
+        return $this->taskRepository->toggleTaskCompletion($task->id);
+    }
+
+    public function getTaskReport()
+    {
+        return $this->taskRepository->getTaskReport();
+    }
 }

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthRepository implements AuthRepositoryInterface
 {
-    public function register($registerDetails): JsonResponse
+    public function register(array $registerDetails): JsonResponse
     {
         // Check if the email exists
         $existingEmail = User::where('email', $registerDetails['email'])->first();
@@ -46,6 +46,7 @@ class AuthRepository implements AuthRepositoryInterface
                 'status' => 'success',
                 'message' => 'Logged in successfully.',
                 'user' => $user,
+                'profile' => $user->profile,
                 'token' => $token
             ], 200);
         } else {
@@ -56,7 +57,7 @@ class AuthRepository implements AuthRepositoryInterface
         }
     }
 
-    public function login($loginDetails): JsonResponse
+    public function login(array $loginDetails): JsonResponse
     {
         $email = $loginDetails['email'];
         $password = $loginDetails['password'];
@@ -85,6 +86,7 @@ class AuthRepository implements AuthRepositoryInterface
                 'status' => 'success',
                 'message' => 'Logged in successfully.',
                 'user' => $user,
+                'profile' => $user->profile,
                 'token' => $token
             ], 200);
         } else {

@@ -2,7 +2,8 @@
 
 namespace App\Interfaces;
 
-interface TaskRepositoryInterface
+interface ProfileRepositoryInterface
 {
-    public function updateProfile($taskDetails);
+    public function updateProfile(array $taskDetails);
+    public function getProfile();
 }

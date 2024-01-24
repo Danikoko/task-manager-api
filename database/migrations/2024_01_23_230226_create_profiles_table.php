@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('user_id');
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('gender')->nullable();
+            $table->string('gender')->default('Male');
             $table->string('image')->nullable();
             $table->timestamps();
         });

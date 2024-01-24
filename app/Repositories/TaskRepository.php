@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\TaskRepositoryInterface;
+use App\Models\Category;
 use App\Models\Task;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\JsonResponse;
@@ -120,5 +121,21 @@ class TaskRepository implements TaskRepositoryInterface
                 'message' => 'The task couldn\'t be updated.'
             ], 401);
         }
+    }
+
+    public function getTaskReport()
+    {
+        $tasksCount = Task::where('user_id', auth('sanctum')->id())->get()->count();
+        $completedTasksCount = Task::where('user_id', auth('sanctum')->id())->where('is_completed', true)->get()->count();
+        $categoriesCount = Category::where('user_id', auth('sanctum')->id())->get()->count();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'tasks_count' => $tasksCount,
+                'completed_tasks_count' => $completedTasksCount,
+                'categories_count' => $categoriesCount
+            ]
+        ], 200);
     }
 }

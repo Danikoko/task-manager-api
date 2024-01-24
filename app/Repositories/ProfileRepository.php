@@ -12,10 +12,14 @@ class ProfileRepository implements ProfileRepositoryInterface
     public function updateProfile(array $profileDetails): JsonResponse
     {
         $profile = Profile::where('user_id', auth('sanctum')->id())->first();
+        $profileId = $profile->id;
+
+        $oldImagePath = $profile->image;
+        $oldImageName = str_replace('storage', 'public', $oldImagePath);
 
         $filePath = NULL;
         $fileName = NULL;
-        if ($profileDetails['file']) {
+        if (isset($profileDetails['file'])) {
             $filePath = Storage::putFile('public/profile_images', $profileDetails['file']);
             $fileName = str_replace('public', 'storage', $filePath);
         }
@@ -23,12 +27,14 @@ class ProfileRepository implements ProfileRepositoryInterface
         // Clean the passed in parameters up
         $profileDetails['image'] = $fileName;
 
+        unset($profileDetails['file']);
+
         // Update the profile
         $profileUpdated = Profile::whereId($profileId)->update($profileDetails);
         if ($profileUpdated) {
             // Delete the old profile image if it exists
             if ($profile->image) {
-                Storage::delete($profile->image);
+                Storage::delete($oldImageName);
             }
 
             return response()->json([
@@ -41,5 +47,15 @@ class ProfileRepository implements ProfileRepositoryInterface
                 'message' => 'The profile couldn\'t be updated.'
             ], 401);
         }
+    }
+
+    public function getProfile(): JsonResponse
+    {
+        $profile = Profile::where('user_id', auth('sanctum')->id())->first();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $profile
+        ], 201);
     }
 }

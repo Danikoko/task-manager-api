@@ -25,7 +25,8 @@ class ProfileRequest extends FormRequest
             'first_name' => 'sometimes',
             'last_name' => 'sometimes',
             'gender' => 'required',
-            'file' => 'sometimes|file|size:1024'
+            'phone' => 'sometimes',
+            'file' => 'sometimes|file|max:1024|image'
         ];
     }
 }

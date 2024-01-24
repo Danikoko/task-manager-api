@@ -15,7 +15,7 @@ class TaskResource extends JsonResource
     public function toArray(Request $request): array
     {
         $cleanedArray = parent::toArray($request);
-        $cleanedArray['category'] = $this->category->name;
-        return parent::toArray($request);
+        $cleanedArray['category_name'] = $this->category->name;
+        return $cleanedArray;
     }
 }
